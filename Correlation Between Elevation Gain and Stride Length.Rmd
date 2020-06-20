@@ -1,0 +1,93 @@
+---
+title: "Correlation Between Elevation Gain and Stride Length"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Question 
+
+I wondered if there was a correlation between elevation gain per mile and the stride length of a runner. 
+
+# How Did I Test this Hypothesis? 
+
+I tested this hypothesis by exporting the GPS data from my watch into a .csv file. I added the CSV file into a data frame and loaded that into R studio. 
+
+Here is the table: 
+
+```{r}
+library(ggplot2)
+running_data=read.csv("/Users/colinfitzgerald/Downloads/elev.csv")
+plot(running_data,xlab="Elevation Gain Per Mile",ylab=
+                          "Average Stride Length Per Mile")
+```
+
+As you can see, there are 16 data points. This makes sense, as I ran 16 miles. 
+
+# Null Hypothesis
+
+Our null hypothesis will be that the correlation coefficient IS NOT significantly different from 0. There IS NOT a significant linear relationship (correlation) between 
+elevation gain in a mile and average stride length. 
+
+# Alternative Hypothesis 
+
+Our alternative hypothesis will be that the population correlation coefficient IS significantly different from 0. There IS a significant linear relationship (correlation) between elevation gain in a mile and average stride length. 
+
+# Computing the Correlation Coefficient 
+
+I used R to compute the correlation coefficient between stride length and elevation gain. Finding the correlation coefficient was a crucial step so I could determine if it would be worth creating a stat plot and regression line of the data. For the correlation coefficient, R came up with 
+
+```{r}
+running_data=read.csv("/Users/colinfitzgerald/Downloads/elev.csv")
+data=data.frame(running_data)
+cor(data$Elev.Gain,data$Avg.Stride.Length)
+```
+
+# Significance of Correlation Coefficient
+
+Using n-2 degrees of freedom, we will look at a table for 14 degrees of freedom in this case. For 14 degrees of freedom, if R is between + or - 0.497, there is no significant difference from 0. However, since our correlation coefficient is -0.774 we can come to the following conclusion. 
+
+# Conclusion 
+
+“There is sufficient evidence to conclude that there is a significant linear relationship between elevation gain and stride length per mile because the correlation coefficient is significantly different from 0.”
+
+# What the Conclusion Means 
+There is a significant linear relationship between 
+elevation gain per mile and average stride length per mile. We can use the regression line to model the linear relationship between elevation gain per mile and average stride length per mile. 
+
+
+# A Stat Plot 
+
+Here is a stat plot of elevation gain per mile and average stride length, a visualization of my GPS data. I added in a regression line of best fit. 
+
+```{r}
+library(ggplot2)
+ggplot(data,aes(x=Elev.Gain,y=Avg.Stride.Length)) +
+         geom_point()  +
+        geom_smooth(method="lm", se=F)+labs(x="Elevation Gain Per Mile",y="Average Stride Length Per Mile")
+```
+
+# So what does this plot predict? 
+
+Well, that is quite simple. Using regression tools in R studio, you can compute the equation for the line of best fit for this data using the function lm.out. The function creates a line in the form of y=mx+b. 
+
+```{r}
+
+lm.out=lm(data$Avg.Stride.Length ~ data$Elev.Gain, data)
+print(lm.out)
+
+```
+
+This means the equation of the regression line is y=-0.0007x+1.686
+
+# Example 
+
+For an elevation gain of 200 feet in one mile, this regression line would predict a stride length of 1.28 meters. This is about 0.1 meters off of the actual data point. 
+
+# Summary 
+
+In summary, since the correlation coefficient is significantly different from zero, a linear relationship between elevation gain per mile and average stride length per mile is thus proven. 
